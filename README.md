@@ -34,13 +34,13 @@ This repository contains a complete set of bare-metal drivers for STM32F407, imp
 
 ## 📁 Repository Structure
 STM32F407-Bare-Metal-Drivers/
-├── docs/ # Technical documentation
-├── drivers/ # Complete driver suite
-│ ├── inc/ # Header files
-│ └── src/ # Implementation files
-├── projects/ # Practical applications
-├── utils/ # Common utilities
-└── README.md # This file
+- ├── docs/ # Technical documentation
+- ├── drivers/ # Complete driver suite
+- │ ├── inc/ # Header files
+- │ └── src/ # Implementation files
+- ├── projects/ # Practical applications
+- ├── utils/ # Common utilities
+- └── README.md # This file
 
 ##🚀 Prerequisites
 - STM32F407 Discovery Board
