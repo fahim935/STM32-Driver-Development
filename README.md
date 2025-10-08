@@ -35,11 +35,14 @@ This repository contains a complete set of bare-metal drivers for STM32F407, imp
 ## 📁 Repository Structure
 STM32F407-Bare-Metal-Drivers/
 - ├── docs/ # Technical documentation
-- ├── drivers/ # Complete driver suite
-- │ ├── inc/ # Header files
-- │ └── src/ # Implementation files
-- ├── projects/ # Practical applications
-- ├── utils/ # Common utilities
+- ├── stm32f407-driver-development/ # Complete STM32CubeIDE workspace
+- │ ├── Inc/ # System & Common Header files
+- │ └── Src/ # for startup, syscalls, and board-specific sources
+- │ └── Projects/ # folder to organize application modules by feature
+- │ └── Drivers/ # for reusable peripheral driver implementations (e.g., GPIO, SPI, I2C, UART)
+- │ └── Startup/ # startup code
+- │ └── STM32F407VGTX_FLASH.ld/ # Linker script for STM32F407G-DISC1 Board embedding
+- │ └── STM32F407VGTX_RAM.ld/ # Linker script for STM32F407G-DISC1 Board embedding (debug in RAM dedicated)
 - └── README.md # This file
 
 ##🚀 Prerequisites
@@ -48,7 +51,7 @@ STM32F407-Bare-Metal-Drivers/
 - ST-Link programmer/debugger
 
 ##🎓 Skills Demonstrated
-- This project showcases embedded systems expertise sought by top semiconductor companies:
+- This project showcases embedded systems expertise:
     - Low-Level Hardware Programming - Direct register manipulation
     - Protocol Implementation - SPI, I2C, UART from datasheet
     - System Architecture - Modular driver design
