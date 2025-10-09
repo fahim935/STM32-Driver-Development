@@ -17,8 +17,6 @@
  */
 
 #include <common.h>
-#include <stdint.h>
-#include <stdio.h>
 #include "project_configuration.h"
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
@@ -30,10 +28,12 @@ int main(void)
 
 #if(FEATURE_SELECTED == STM32_PRINT_HELLO_WORLD)
 	printHelloWorld();
-#elif
-	printf("STM32F407 Driver Development Project\n");
+#elif (FEATURE_SELECTED == STM32_COPY_DATA_FROM_FLASH_TO_SRAM)
+    copyDataFromFlashToSram();
+#else
+    printf("STM32F407 Driver Development Project\n");
 #endif
 
     /* Loop forever */
-	for(;;);
+    for(;;);
 }
