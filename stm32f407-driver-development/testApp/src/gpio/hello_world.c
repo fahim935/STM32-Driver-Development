@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 #include <hello_world.h>
+#if(FEATURE_SELECTED == STM32_PRINT_HELLO_WORLD)
 #include <stdio.h>
 
 /*
@@ -20,3 +21,4 @@ void print_hello_world(){
     printf("Hello World\n");
     return;
 }
+#endif

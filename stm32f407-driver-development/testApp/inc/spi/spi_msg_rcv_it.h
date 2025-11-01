@@ -1,18 +1,20 @@
 /*******************************************************************************
- * @file           onboard_led_toggle.c
+ * @file           spi_msg_rcv_it.h
  * @brief          Brief description
  * 
  * @author         Fahim Akhtar
- * @date           14-Oct-2025
- * @time           8:13:25 AM
+ * @date           01-Nov-2025
+ * @time           12:37:52 PM
  * @version        1.0
  * @copyright      (c) 2025
  ******************************************************************************/
 
-#ifndef _INC_ONBOARDLEDTOGGLE_C_
-#define _INC_ONBOARDLEDTOGGLE_C_
+#ifndef INC_SPI_SPI_MSG_RCV_IT_H_
+#define INC_SPI_SPI_MSG_RCV_IT_H_
+
 #include "app_manager.h"
-#if (FEATURE_SELECTED == STM32_TOGGLE_ON_BOARD_LED)
-void toggle_onboard_led(void);
+#if (FEATURE_SELECTED == STM32_SPI2_READ_DATA_FROM_SLAVE)
+void spi2_read_msg_from_slave(void);
+
 #endif
-#endif /* _INC_ONBOARDLEDTOGGLE_C_ */
+#endif /* INC_SPI_SPI_MSG_RCV_IT_H__ */

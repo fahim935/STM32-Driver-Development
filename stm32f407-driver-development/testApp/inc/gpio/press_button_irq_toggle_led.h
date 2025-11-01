@@ -12,6 +12,9 @@
 #ifndef INC_PRESS_BUTTON_IRQ_TOGGLE_LED_H_
 #define INC_PRESS_BUTTON_IRQ_TOGGLE_LED_H_
 
+#include "app_manager.h"
+#if (FEATURE_SELECTED == STM32_PRESS_BUTTON_IRQ_TOGGLE_LED)
 void ext_button_irq_toggle_led(void);
+#endif
 
 #endif /* INC_PRESS_BUTTON_IRQ_TOGGLE_LED_H__ */

@@ -9,9 +9,10 @@
  * @version        1.0
  * @copyright      (c) 2025
  ******************************************************************************/
-#include "common.h"
-#include "onboard_led_toggle.h"
 
+#include "onboard_led_toggle.h"
+#if (FEATURE_SELECTED == STM32_TOGGLE_ON_BOARD_LED)
+#include "common.h"
 
 /*
  * There are 4 LED available on STM32 Discovery board. Write a simple
@@ -58,5 +59,5 @@ void toggle_onboard_led(void) {
         GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_15);
         delay();
     }
-
 }
+#endif

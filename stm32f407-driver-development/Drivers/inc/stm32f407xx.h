@@ -317,6 +317,21 @@ typedef struct {
     __vo uint32_t CFGR;
 }SYSCFG_RegDef_t;
 
+
+
+typedef struct {
+    __vo uint32_t CR1;          /* Control Register 1  */
+    __vo uint32_t CR2;          /* Control Register 2  */
+    __vo uint32_t SR;           /* Status Register     */
+    __vo uint32_t DR;           /* Data Register       */
+    __vo uint32_t CRCPR;        /*      */
+    __vo uint32_t RXCRCR;       /*      */
+    __vo uint32_t TXCRCR;       /*      */
+    __vo uint32_t I2SCFGR;      /*      */
+    __vo uint32_t I2SPR;        /*      */
+}SPI_RegDef_t;
+
+
 /****************************************************************************
  *          Peripheral definitions (Type casted to XXX_RegDef_t)            *
  ****************************************************************************/
@@ -334,10 +349,13 @@ typedef struct {
 #define EXTI        ((EXTI_RegDef_t *) EXTI_BASEADDR)
 #define SYSCFG      ((SYSCFG_RegDef_t *) SYSCFG_BASEADDR)
 
+#define SPI1        ((SPI_RegDef_t *) SPI1_BASEADDR)
+#define SPI2        ((SPI_RegDef_t *) SPI2_BASEADDR)
+#define SPI3        ((SPI_RegDef_t *) SPI3_BASEADDR)
+
 /****************************************************************************
  *              Clock enable macros for GPIOx peripherals                   *
  ****************************************************************************/
-
 #define GPIOA_PCLK_EN()         (RCC->AHB1ENR |= (1 << 0))
 #define GPIOB_PCLK_EN()         (RCC->AHB1ENR |= (1 << 1))
 #define GPIOC_PCLK_EN()         (RCC->AHB1ENR |= (1 << 2))
@@ -351,7 +369,6 @@ typedef struct {
 /****************************************************************************
  *              Clock Disable macros for GPIOx peripherals                  *
  ****************************************************************************/
-
 #define GPIOA_PCLK_DI()         (RCC->AHB1ENR &= ~(1 << 0))
 #define GPIOB_PCLK_DI()         (RCC->AHB1ENR &= ~(1 << 1))
 #define GPIOC_PCLK_DI()         (RCC->AHB1ENR &= ~(1 << 2))
@@ -369,6 +386,24 @@ typedef struct {
  * again set to 0. otherwise that PORT will be always in reset condition.
  * we will be unable to enable the clock for that PORT
  * */
+
+/*******************************************************************
+ * @section         -   GPIO Peripheral Reset Macros
+ *
+ * @brief           -   These macros perform a hardware reset of the
+ *                      specified GPIO port by toggling its reset bit
+ *                      in the RCC AHB1RSTR register.
+ *
+ * @usage           -   Call the appropriate macro to reset GPIOx:
+ *                          GPIOA_REG_RESET();
+ *                          GPIOB_REG_RESET();
+ *                          ...
+ *                          GPIOI_REG_RESET();
+ *
+ * @note            -   Each macro sets and clears the corresponding
+ *                      reset bit. If the bit remains set, the port
+ *                      stays in reset state and cannot be clocked.
+ ********************************************************************/
 #define GPIOA_REG_RESET()   do{ (RCC->AHB1RSTR |= (1 << 0));    \
                                 (RCC->AHB1RSTR &= ~(1 << 0));   \
                               }while(0)
@@ -404,6 +439,31 @@ typedef struct {
 #define GPIOI_REG_RESET()   do{ (RCC->AHB1RSTR |= (1 << 8));    \
                                 (RCC->AHB1RSTR &= ~(1 << 8));   \
                               }while(0)
+
+/*******************************************************************
+ * @section         -   SPI Peripheral Reset Macros
+ *
+ * @brief           -   These macros perform a hardware reset of the
+ *                      specified SPI peripheral by toggling the
+ *                      corresponding reset bit in the RCC reset register.
+ *
+ * @usage           -   Call the appropriate macro to reset SPIx:
+ *                          SPI1_REG_RESET();
+ *                          SPI2_REG_RESET();
+ *                          SPI3_REG_RESET();
+ *
+ * @note            -   These macros are typically used in SPI_DeInit()
+ *                      to restore peripheral registers to default state.
+ ********************************************************************/
+#define SPI1_REG_RESET()      do { (RCC->APB2RSTR |= (1 << 12)); \
+                                   (RCC->APB2RSTR &= ~(1 << 12));\
+                                 } while(0)
+#define SPI2_REG_RESET()      do { (RCC->APB1RSTR |= (1 << 14)); \
+                                   (RCC->APB1RSTR &= ~(1 << 14));\
+                                 } while(0)
+#define SPI3_REG_RESET()      do { (RCC->APB1RSTR |= (1 << 15)); \
+                                   (RCC->APB1RSTR &= ~(1 << 15));\
+                                 } while(0)
 
 /****************************************************************************
  *              Clock Enable Macro for I2Cx peripheral                      *
@@ -489,6 +549,20 @@ typedef struct {
 #define IRQ_NO_EXTI9_5      23
 #define IRQ_NO_EXTIO15_10   40
 
+#define IRQ_NO_SPI1         35
+#define IRQ_NO_SPI2         36
+#define IRQ_NO_SPI3         51
+
+#define IRQ_NO_SPI4
+#define IRQ_NO_I2C1_EV      31
+#define IRQ_NO_I2C1_ER      32
+#define IRQ_NO_USART1       37
+#define IRQ_NO_USART2       38
+#define IRQ_NO_USART3       39
+#define IRQ_NO_UART4        52
+#define IRQ_NO_UART5        53
+#define IRQ_NO_USART6       71
+
 
 /****************************************************************************
  *                          NVIC IRQ PRIORITY Number                        *
@@ -513,15 +587,77 @@ typedef struct {
 
 
 /****************************************************************************
+ *              SPI Peripheral Register bit position                        *
+ ****************************************************************************/
+/*
+ * SPI Control register 1 (SPI_CR1)
+ * */
+#define SPI_CR1_CPHA        0
+#define SPI_CR1_CPOL        1
+#define SPI_CR1_MSTR        2
+#define SPI_CR1_BR          3
+#define SPI_CR1_SPE         6
+#define SPI_CR1_LSB_FIRST   7
+#define SPI_CR1_SSI         8
+#define SPI_CR1_SSM         9
+#define SPI_CR1_RX_ONLY     10
+#define SPI_CR1_DFF         11
+#define SPI_CR1_CRC_NEXT    12
+#define SPI_CR1_CRC_EN      13
+#define SPI_CR1_BIDI_OE     14
+#define SPI_CR1_BIDI_MODE   15
+
+/*
+ * SPI Control register 2 (SPI_CR2)
+ * */
+#define SPI_CR2_RXDMAEN     0
+#define SPI_CR2_TXDMAEN     1
+#define SPI_CR2_SSOE        2
+#define SPI_CR2_FRF         4
+#define SPI_CR2_ERRIE       5
+#define SPI_CR2_RXNEIE      6
+#define SPI_CR2_TXEIE       7
+
+/*
+ * SPI status register (SPI_SR)
+ * */
+#define SPI_SR_RXNE         0
+#define SPI_SR_TXE          1
+#define SPI_SR_CHSIDE       2
+#define SPI_SR_UDR          3
+#define SPI_SR_CRC_ERR      4
+#define SPI_SR_MODF         5
+#define SPI_SR_OVR          6
+#define SPI_SR_BSY          7
+#define SPI_SR_FRE          8
+
+/*
+ * Possible SPI Application states
+ *
+ * */
+#define SPI_READY           0
+#define SPI_BUSY_IN_RX      1
+#define SPI_BUSY_IN_TX      2
+
+/*
+ * Possible SPI Application Events
+ *
+ * */
+#define SPI_EVENT_TX_CMPLT      1
+#define SPI_EVENT_RX_CMPLT      2
+#define SPI_EVENT_OVR_ERR       3
+#define SPI_EVENT_CRC_ERR       4
+
+/****************************************************************************
  *                              Generic macros                              *
  ****************************************************************************/
-
 #define ENABLE          1
 #define DISABLE         0
 #define SET             ENABLE
 #define RESET           DISABLE
 #define GPIO_PIN_SET    SET
 #define GPIO_PIN_RESET  RESET
-
+#define FLAG_RESET      RESET
+#define FLAG_SET        SET
 
 #endif /* INC_STM32F407XX_H_ */

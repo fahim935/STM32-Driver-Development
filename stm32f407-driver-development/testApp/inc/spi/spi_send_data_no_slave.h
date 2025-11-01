@@ -1,18 +1,19 @@
 /*******************************************************************************
- * @file           onboard_led_toggle.c
+ * @file           spi_data_Send_test.h
  * @brief          Brief description
  * 
  * @author         Fahim Akhtar
- * @date           14-Oct-2025
- * @time           8:13:25 AM
+ * @date           26-Oct-2025
+ * @time           11:45:50 AM
  * @version        1.0
  * @copyright      (c) 2025
  ******************************************************************************/
 
-#ifndef _INC_ONBOARDLEDTOGGLE_C_
-#define _INC_ONBOARDLEDTOGGLE_C_
+#ifndef INC_SPI_SEND_DATA_NO_SLAVE_H_
+#define INC_SPI_SEND_DATA_NO_SLAVE_H_
 #include "app_manager.h"
-#if (FEATURE_SELECTED == STM32_TOGGLE_ON_BOARD_LED)
-void toggle_onboard_led(void);
+#if (FEATURE_SELECTED == STM32_SPI2_SEND_DATA_WITH_NO_SLAVE)
+void send_data_over_spi2(void);
 #endif
-#endif /* _INC_ONBOARDLEDTOGGLE_C_ */
+
+#endif /* INC_SPI_SEND_DATA_NO_SLAVE_H__ */

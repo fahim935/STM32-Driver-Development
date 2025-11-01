@@ -13,6 +13,7 @@
 
 
 #include <press_onboard_button_toggle_led.h>
+#if (FEATURE_SELECTED == STM32_PRESS_BUTTON_TO_ON_LED)
 #include "common.h"
 
 /*
@@ -74,3 +75,4 @@ void onboard_button_press_toggle_led(void){
         }
     }
 }
+#endif

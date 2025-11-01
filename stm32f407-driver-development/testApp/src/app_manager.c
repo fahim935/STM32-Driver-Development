@@ -13,6 +13,17 @@
 
 #include "app_manager.h"
 
+
+/**
+ * @brief Entry point for executing the selected STM32 driver demo.
+ *
+ * Based on the value of the `FEATURE_SELECTED` macro, this function calls the
+ * corresponding feature implementation. If no valid feature is selected, it
+ * prints a fallback message to indicate misconfiguration.
+ *
+ * This function is typically invoked from `main()` after system initialization.
+ */
+
 void AppManager_Run(void)
 {
 
@@ -28,6 +39,14 @@ void AppManager_Run(void)
     ext_button_press_toggle_led();
 #elif (FEATURE_SELECTED == STM32_PRESS_BUTTON_IRQ_TOGGLE_LED)
     ext_button_irq_toggle_led();
+#elif (FEATURE_SELECTED == STM32_SPI2_SEND_DATA_WITH_NO_SLAVE)
+    send_data_over_spi2();
+#elif (FEATURE_SELECTED == STM32_SPI2_SEND_DATA_TO_SLAVE)
+    spi2_send_data_to_slave();
+#elif (FEATURE_SELECTED == STM32_SPI2_MASTER_SLAVE_COMM)
+    spi2_communicate_with_slave();
+#elif (FEATURE_SELECTED == STM32_SPI2_READ_DATA_FROM_SLAVE)
+    spi2_read_msg_from_slave();
 #else
     printf("STM32F407 : No valid feature selected\n");
 #endif

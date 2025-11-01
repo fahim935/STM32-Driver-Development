@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 #include <copy_data_flash_to_sram.h>
+#if (FEATURE_SELECTED == STM32_COPY_DATA_FROM_FLASH_TO_SRAM)
 #include "common.h"
 
 /* This is string literal (constant data).
@@ -49,4 +50,4 @@ void copy_data_flash_to_sram(void) {
         userData[i] = *(pMsg + i); // Here Data is copy from Flash to SRAM
     }
 }
-
+#endif

@@ -7,9 +7,9 @@ Complete bare-metal peripheral driver suite for STM32F407 microcontroller, devel
 
 |  Driver  |  Status        |  Features |
 |----------|----------------|-----------|
-| **GPIO** | 🔄 In Progress | Pin configuration, interrupt handling, alternate function |
-| **SPI**  | 🔄 In Progress | Master/slave modes, DMA support, error handling |
-| **I2C**  | ⏳ Planned     | Multi-master, SMBus, clock stretching |
+| **GPIO** | ✅ Completed   | Pin configuration, interrupt handling, alternate function |
+| **SPI**  | ✅ Completed   | Master/slave modes, error handling |
+| **I2C**  | 🔄 In Progress | Multi-master, SMBus, clock stretching |
 | **UART** | ⏳ Planned     | Polling/Interrupt/DMA modes, flow control |
 | **USART**| ⏳ Planned     | Synchronous mode, LIN, smartcard |
 | **RCC**  | ✅ Partial     | Clock system configuration |
@@ -33,14 +33,12 @@ This repository contains a complete set of bare-metal drivers for STM32F407, imp
 - **Standards**: MISRA C compliance where applicable
 
 ## 📁 Repository Structure
-STM32F407-Bare-Metal-Drivers/
-- ├── docs/ # Technical documentation
+STM32-Driver-Development/
+- ├── docs/ # Technical documentation & required resources
 - ├── stm32f407-driver-development/ # Complete STM32CubeIDE workspace
-- │ ├── Inc/ # System & Common Header files
-- │ └── Src/ # for startup, syscalls, and board-specific sources
-- │ └── Projects/ # folder to organize application modules by feature
+- │ └── testApp/ # folder to organize application modules by feature
 - │ └── Drivers/ # for reusable peripheral driver implementations (e.g., GPIO, SPI, I2C, UART)
-- │ └── Startup/ # startup code
+- │ └── System/ # for startup, syscalls, and board-specific sources
 - │ └── STM32F407VGTX_FLASH.ld/ # Linker script for STM32F407G-DISC1 Board embedding
 - │ └── STM32F407VGTX_RAM.ld/ # Linker script for STM32F407G-DISC1 Board embedding (debug in RAM dedicated)
 - └── README.md # This file

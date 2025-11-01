@@ -11,6 +11,7 @@
  ******************************************************************************/
 
 #include <press_external_button_toggle_led.h>
+#if (FEATURE_SELECTED == STM32_PRESS_EXTN_BUTTON_TO_ON_ENT_LED)
 #include "common.h"
 
 /*
@@ -48,6 +49,5 @@ void ext_button_press_toggle_led(void){
             GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_NO_8);
         }
     }
-
 }
-
+#endif
