@@ -37,6 +37,11 @@
 #include "press_button_irq_toggle_led.h"
 #include "spi_master_slave_comm.h"
 #include "spi_msg_rcv_it.h"
+#include "i2c_mstr_tx.h"
+#include "i2c_mstr_tx_rx.h"
+#include "i2c_mstr_irq_tx_rx.h"
+#include "i2c_slv_irq_tx_rx.h"
+#include "i2c_slv_irq_tx_rx_large_data.h"
 
 
 // Basic feature demos
@@ -55,8 +60,16 @@
 #define STM32_SPI2_MASTER_SLAVE_COMM            9   /*!< Full-duplex SPI master-slave communication */
 #define STM32_SPI2_READ_DATA_FROM_SLAVE         10  /*!< Reads SPI data from slave when interrupt triggered by slave */
 
+// I2C communication demos
+#define STM32_I2C_MSTR_TX                       11
+#define STM32_I2C_MSTR_TX_RX                    12
+#define STM32_I2C_MSTR_IRQ_TX_RX                13
+
+#define STM32_I2C_SLV_IRQ_TX_RX                 14
+#define STM32_I2C_SLV_IRQ_TX_RX_LARGE_DATA      15
+
 // Select the active feature to run
-#define FEATURE_SELECTED        STM32_SPI2_READ_DATA_FROM_SLAVE
+#define FEATURE_SELECTED        STM32_I2C_SLV_IRQ_TX_RX_LARGE_DATA
 
 
 

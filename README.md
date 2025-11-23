@@ -9,8 +9,8 @@ Complete bare-metal peripheral driver suite for STM32F407 microcontroller, devel
 |----------|----------------|-----------|
 | **GPIO** | ✅ Completed   | Pin configuration, interrupt handling, alternate function |
 | **SPI**  | ✅ Completed   | Master/slave modes, error handling |
-| **I2C**  | 🔄 In Progress | Multi-master, SMBus, clock stretching |
-| **UART** | ⏳ Planned     | Polling/Interrupt/DMA modes, flow control |
+| **I2C**  | ✅ Completed   | Polling/Interrupt modes, error handling |
+| **UART** | 🔄 In Progress | Polling/Interrupt modes, flow control |
 | **USART**| ⏳ Planned     | Synchronous mode, LIN, smartcard |
 | **RCC**  | ✅ Partial     | Clock system configuration |
 

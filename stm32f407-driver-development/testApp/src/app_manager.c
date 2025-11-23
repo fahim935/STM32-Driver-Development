@@ -47,6 +47,16 @@ void AppManager_Run(void)
     spi2_communicate_with_slave();
 #elif (FEATURE_SELECTED == STM32_SPI2_READ_DATA_FROM_SLAVE)
     spi2_read_msg_from_slave();
+#elif (FEATURE_SELECTED == STM32_I2C_MSTR_TX)
+    i2c_master_tx_testing();
+#elif (FEATURE_SELECTED == STM32_I2C_MSTR_TX_RX)
+    i2c_master_rx_testing();
+#elif (FEATURE_SELECTED == STM32_I2C_MSTR_IRQ_TX_RX)
+    i2c_master_interrupt_base_rx_testing();
+#elif (FEATURE_SELECTED == STM32_I2C_SLV_IRQ_TX_RX)
+    i2c_slv_irq_tx_rx_testing();
+#elif (FEATURE_SELECTED == STM32_I2C_SLV_IRQ_TX_RX_LARGE_DATA)
+    i2c_slv_irq_tx_rx_large_data_testing();
 #else
     printf("STM32F407 : No valid feature selected\n");
 #endif

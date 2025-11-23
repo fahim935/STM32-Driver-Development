@@ -317,19 +317,36 @@ typedef struct {
     __vo uint32_t CFGR;
 }SYSCFG_RegDef_t;
 
-
-
+/******************************************************************************
+ *                        SPI Register Definition
+ ******************************************************************************/
 typedef struct {
-    __vo uint32_t CR1;          /* Control Register 1  */
-    __vo uint32_t CR2;          /* Control Register 2  */
-    __vo uint32_t SR;           /* Status Register     */
-    __vo uint32_t DR;           /* Data Register       */
-    __vo uint32_t CRCPR;        /*      */
-    __vo uint32_t RXCRCR;       /*      */
-    __vo uint32_t TXCRCR;       /*      */
-    __vo uint32_t I2SCFGR;      /*      */
-    __vo uint32_t I2SPR;        /*      */
+    __vo uint32_t CR1;          /* Main configuration register (mode, polarity, phase, data format, enable)  */
+    __vo uint32_t CR2;          /* Interrupts, DMA, and frame format control  */
+    __vo uint32_t SR;           /* Status and event flags (TXE, RXNE, BSY, etc.) */
+    __vo uint32_t DR;           /* Data register for TX/RX */
+    __vo uint32_t CRCPR;        /* CRC polynomial configuration */
+    __vo uint32_t RXCRCR;       /* Received CRC result */
+    __vo uint32_t TXCRCR;       /* Transmitted CRC result */
+    __vo uint32_t I2SCFGR;      /* Configures SPI peripheral for I²S audio mode */
+    __vo uint32_t I2SPR;        /* I²S clock prescaler configuration */
 }SPI_RegDef_t;
+
+/******************************************************************************
+ *                        I2C Register Definition
+ ******************************************************************************/
+typedef struct {
+    __vo uint32_t CR1;          /* Control Register 1 - Peripheral enable, Start/Stop, ACK control */
+    __vo uint32_t CR2;          /* Control Register 2 - Clock frequency, interrupts, DMA */
+    __vo uint32_t OAR1;         /* Own address register1 - In Case of slave mode */
+    __vo uint32_t OAR2;         /* Own address register2 - Secondary address (dual mode) */
+    __vo uint32_t DR;           /* Data Register - Data transmit/receive buffer*/
+    __vo uint32_t SR1;          /* Status Register 1 - Status (events, errors) */
+    __vo uint32_t SR2;          /* Status Register 2 - Mode and bus status */
+    __vo uint32_t CCR;          /* Clock Control Register - To configure the speed/mode */
+    __vo uint32_t TRISE;        /* Rise time configuration */
+    __vo uint32_t FLTR;         /* Digital/analog filter configuration */
+} I2C_RegDef_t;
 
 
 /****************************************************************************
@@ -352,6 +369,10 @@ typedef struct {
 #define SPI1        ((SPI_RegDef_t *) SPI1_BASEADDR)
 #define SPI2        ((SPI_RegDef_t *) SPI2_BASEADDR)
 #define SPI3        ((SPI_RegDef_t *) SPI3_BASEADDR)
+
+#define I2C1        ((I2C_RegDef_t *)I2C1_BASEADDR)
+#define I2C2        ((I2C_RegDef_t *)I2C2_BASEADDR)
+#define I2C3        ((I2C_RegDef_t *)I2C3_BASEADDR)
 
 /****************************************************************************
  *              Clock enable macros for GPIOx peripherals                   *
@@ -465,6 +486,31 @@ typedef struct {
                                    (RCC->APB1RSTR &= ~(1 << 15));\
                                  } while(0)
 
+/*******************************************************************
+ * @section         -   I2C Peripheral Reset Macros
+ *
+ * @brief           -   These macros perform a hardware reset of the
+ *                      specified I2C peripheral by toggling the
+ *                      corresponding reset bit in the RCC reset register.
+ *
+ * @usage           -   Call the appropriate macro to reset I2Cx:
+ *                          I2C1_REG_RESET();
+ *                          I2C2_REG_RESET();
+ *                          I2C3_REG_RESET();
+ *
+ * @note            -   These macros are typically used in I2C_DeInit()
+ *                      to restore peripheral registers to default state.
+ ********************************************************************/
+#define I2C1_REG_RESET()      do { (RCC->APB1RSTR |= (1 << 21)); \
+                                   (RCC->APB1RSTR &= ~(1 << 21));\
+                                 } while(0)
+#define I2C2_REG_RESET()      do { (RCC->APB1RSTR |= (1 << 22)); \
+                                   (RCC->APB1RSTR &= ~(1 << 22));\
+                                 } while(0)
+#define I2C3_REG_RESET()      do { (RCC->APB1RSTR |= (1 << 23)); \
+                                   (RCC->APB1RSTR &= ~(1 << 23));\
+                                 } while(0)
+
 /****************************************************************************
  *              Clock Enable Macro for I2Cx peripheral                      *
  ****************************************************************************/
@@ -541,112 +587,206 @@ typedef struct {
  * Note: You can get these number info from Vector table of MCU reference manual
  * */
 
-#define IRQ_NO_EXTI0        6
-#define IRQ_NO_EXTI1        7
-#define IRQ_NO_EXTI2        8
-#define IRQ_NO_EXTI3        9
-#define IRQ_NO_EXTI4        10
-#define IRQ_NO_EXTI9_5      23
-#define IRQ_NO_EXTIO15_10   40
+#define IRQ_NO_EXTI0          6     // EXTI Line0 interrupt (for pin PA0, PB0, etc.)
+#define IRQ_NO_EXTI1          7     // EXTI Line1 interrupt
+#define IRQ_NO_EXTI2          8     // EXTI Line2 interrupt
+#define IRQ_NO_EXTI3          9     // EXTI Line3 interrupt
+#define IRQ_NO_EXTI4          10    // EXTI Line4 interrupt
+#define IRQ_NO_EXTI9_5        23    // EXTI Line[9:5] interrupts combined
+#define IRQ_NO_EXTI15_10      40    // EXTI Line[15:10] interrupts combined
 
-#define IRQ_NO_SPI1         35
-#define IRQ_NO_SPI2         36
-#define IRQ_NO_SPI3         51
+#define IRQ_NO_SPI1           35    // SPI1 global interrupt
+#define IRQ_NO_SPI2           36    // SPI2 global interrupt
+#define IRQ_NO_SPI3           51    // SPI3 global interrupt
+#define IRQ_NO_SPI4           84    // SPI4 global interrupt (if available on device)
 
-#define IRQ_NO_SPI4
-#define IRQ_NO_I2C1_EV      31
-#define IRQ_NO_I2C1_ER      32
-#define IRQ_NO_USART1       37
-#define IRQ_NO_USART2       38
-#define IRQ_NO_USART3       39
-#define IRQ_NO_UART4        52
-#define IRQ_NO_UART5        53
-#define IRQ_NO_USART6       71
+#define IRQ_NO_I2C1_EV        31    // I2C1 Event interrupt (TXE, RXNE, etc.)
+#define IRQ_NO_I2C1_ER        32    // I2C1 Error interrupt (BERR, ARLO, OVR, etc.)
+
+#define IRQ_NO_I2C2_EV        33    // I2C2 Event interrupt (TXE, RXNE, etc.)
+#define IRQ_NO_I2C2_ER        34    // I2C2 Error interrupt (BERR, ARLO, OVR, etc.)
+
+#define IRQ_NO_I2C3_EV        72    // I2C3 Event interrupt (TXE, RXNE, etc.)
+#define IRQ_NO_I2C3_ER        73    // I2C3 Error interrupt (BERR, ARLO, OVR, etc.)
+
+#define IRQ_NO_USART1         37    // USART1 global interrupt
+#define IRQ_NO_USART2         38    // USART2 global interrupt
+#define IRQ_NO_USART3         39    // USART3 global interrupt
+#define IRQ_NO_UART4          52    // UART4  global interrupt
+#define IRQ_NO_UART5          53    // UART5  global interrupt
+#define IRQ_NO_USART6         71    // USART6 global interrupt (on high-density devices)
+
+/****************************************************************************
+ *                          NVIC IRQ Priority Numbers
+ ****************************************************************************/
+#define NVIC_IRQ_PRI0         0     // Highest priority level
+#define NVIC_IRQ_PRI1         1     // Priority level 1
+#define NVIC_IRQ_PRI2         2     // Priority level 2
+#define NVIC_IRQ_PRI3         3     // Priority level 3
+#define NVIC_IRQ_PRI4         4     // Priority level 4
+#define NVIC_IRQ_PRI5         5     // Priority level 5
+#define NVIC_IRQ_PRI6         6     // Priority level 6
+#define NVIC_IRQ_PRI7         7     // Priority level 7
+#define NVIC_IRQ_PRI8         8     // Priority level 8
+#define NVIC_IRQ_PRI9         9     // Priority level 9
+#define NVIC_IRQ_PRI10        10    // Priority level 10
+#define NVIC_IRQ_PRI11        11    // Priority level 11
+#define NVIC_IRQ_PRI12        12    // Priority level 12
+#define NVIC_IRQ_PRI13        13    // Priority level 13
+#define NVIC_IRQ_PRI14        14    // Priority level 14
+#define NVIC_IRQ_PRI15        15    // Lowest priority level
 
 
 /****************************************************************************
- *                          NVIC IRQ PRIORITY Number                        *
+ *              SPI Peripheral Register Bit Positions
  ****************************************************************************/
 
-#define NVIC_IRQ_PRI0       0
-#define NVIC_IRQ_PRI1       1
-#define NVIC_IRQ_PRI2       2
-#define NVIC_IRQ_PRI3       3
-#define NVIC_IRQ_PRI4       4
-#define NVIC_IRQ_PRI5       5
-#define NVIC_IRQ_PRI6       6
-#define NVIC_IRQ_PRI7       7
-#define NVIC_IRQ_PRI8       8
-#define NVIC_IRQ_PRI9       9
-#define NVIC_IRQ_PRI10      10
-#define NVIC_IRQ_PRI11      11
-#define NVIC_IRQ_PRI12      12
-#define NVIC_IRQ_PRI13      13
-#define NVIC_IRQ_PRI14      14
-#define NVIC_IRQ_PRI15      15
-
-
-/****************************************************************************
- *              SPI Peripheral Register bit position                        *
- ****************************************************************************/
 /*
- * SPI Control register 1 (SPI_CR1)
- * */
-#define SPI_CR1_CPHA        0
-#define SPI_CR1_CPOL        1
-#define SPI_CR1_MSTR        2
-#define SPI_CR1_BR          3
-#define SPI_CR1_SPE         6
-#define SPI_CR1_LSB_FIRST   7
-#define SPI_CR1_SSI         8
-#define SPI_CR1_SSM         9
-#define SPI_CR1_RX_ONLY     10
-#define SPI_CR1_DFF         11
-#define SPI_CR1_CRC_NEXT    12
-#define SPI_CR1_CRC_EN      13
-#define SPI_CR1_BIDI_OE     14
-#define SPI_CR1_BIDI_MODE   15
+ * SPI Control Register 1 (SPI_CR1)
+ */
+#define SPI_CR1_CPHA          0   // Clock Phase: 0 = first edge, 1 = second edge sampling
+#define SPI_CR1_CPOL          1   // Clock Polarity: 0 = clock low when idle, 1 = clock high when idle
+#define SPI_CR1_MSTR          2   // Master Selection: 1 = Master mode, 0 = Slave mode
+#define SPI_CR1_BR            3   // Baud Rate Control (bits 5:3): f_PCLK / 2^(BR+1)
+#define SPI_CR1_SPE           6   // SPI Enable: 1 = enable SPI peripheral
+#define SPI_CR1_LSB_FIRST     7   // Frame Format: 1 = LSB first, 0 = MSB first
+#define SPI_CR1_SSI           8   // Internal Slave Select (used when SSM = 1)
+#define SPI_CR1_SSM           9   // Software Slave Management Enable
+#define SPI_CR1_RX_ONLY       10  // Receive Only: 1 = receive-only mode (in master)
+#define SPI_CR1_DFF           11  // Data Frame Format: 0 = 8-bit, 1 = 16-bit
+#define SPI_CR1_CRC_NEXT      12  // Transmit CRC Next: next transfer is CRC
+#define SPI_CR1_CRC_EN        13  // CRC Calculation Enable
+#define SPI_CR1_BIDI_OE       14  // Output Enable in Bidirectional Mode
+#define SPI_CR1_BIDI_MODE     15  // Bidirectional Data Mode Enable: 1 = 1-line, 0 = 2-line
 
 /*
- * SPI Control register 2 (SPI_CR2)
- * */
-#define SPI_CR2_RXDMAEN     0
-#define SPI_CR2_TXDMAEN     1
-#define SPI_CR2_SSOE        2
-#define SPI_CR2_FRF         4
-#define SPI_CR2_ERRIE       5
-#define SPI_CR2_RXNEIE      6
-#define SPI_CR2_TXEIE       7
+ * SPI Control Register 2 (SPI_CR2)
+ */
+#define SPI_CR2_RXDMAEN       0   // RX Buffer DMA Enable
+#define SPI_CR2_TXDMAEN       1   // TX Buffer DMA Enable
+#define SPI_CR2_SSOE          2   // SS Output Enable (for master mode)
+#define SPI_CR2_FRF           4   // Frame Format: 0 = Motorola, 1 = TI frame format
+#define SPI_CR2_ERRIE         5   // Error Interrupt Enable
+#define SPI_CR2_RXNEIE        6   // RX Buffer Not Empty Interrupt Enable
+#define SPI_CR2_TXEIE         7   // TX Buffer Empty Interrupt Enable
 
 /*
- * SPI status register (SPI_SR)
- * */
-#define SPI_SR_RXNE         0
-#define SPI_SR_TXE          1
-#define SPI_SR_CHSIDE       2
-#define SPI_SR_UDR          3
-#define SPI_SR_CRC_ERR      4
-#define SPI_SR_MODF         5
-#define SPI_SR_OVR          6
-#define SPI_SR_BSY          7
-#define SPI_SR_FRE          8
+ * SPI Status Register (SPI_SR)
+ */
+#define SPI_SR_RXNE           0   // Receive Buffer Not Empty
+#define SPI_SR_TXE            1   // Transmit Buffer Empty
+#define SPI_SR_CHSIDE         2   // Channel Side (I2S mode only)
+#define SPI_SR_UDR            3   // Underrun Flag (slave mode)
+#define SPI_SR_CRC_ERR        4   // CRC Error Flag
+#define SPI_SR_MODF           5   // Mode Fault (master/slave conflict)
+#define SPI_SR_OVR            6   // Overrun Flag (data lost)
+#define SPI_SR_BSY            7   // Busy Flag: 1 = SPI currently transmitting/receiving
+#define SPI_SR_FRE            8   // Frame Format Error (TI mode only)
 
 /*
- * Possible SPI Application states
- *
- * */
-#define SPI_READY           0
-#define SPI_BUSY_IN_RX      1
-#define SPI_BUSY_IN_TX      2
+ * Possible SPI Application States
+ */
+#define SPI_READY             0   // SPI is ready for new communication
+#define SPI_BUSY_IN_RX        1   // SPI is busy in reception
+#define SPI_BUSY_IN_TX        2   // SPI is busy in transmission
 
 /*
  * Possible SPI Application Events
- *
- * */
-#define SPI_EVENT_TX_CMPLT      1
-#define SPI_EVENT_RX_CMPLT      2
-#define SPI_EVENT_OVR_ERR       3
-#define SPI_EVENT_CRC_ERR       4
+ */
+#define SPI_EVENT_TX_CMPLT    1   // Transmission Complete Event
+#define SPI_EVENT_RX_CMPLT    2   // Reception Complete Event
+#define SPI_EVENT_OVR_ERR     3   // Overrun Error Event
+#define SPI_EVENT_CRC_ERR     4   // CRC Error Event
+
+
+/****************************************************************************
+ *              I2C Peripheral Register Bit Positions
+ ****************************************************************************/
+
+/*
+ * I2C Control Register 1 (I2C_CR1)
+ */
+#define I2C_CR1_PE             0   // Peripheral Enable: 1 = I2C peripheral enabled
+#define I2C_CR1_SMBUS          1   // SMBus Mode: 1 = SMBus mode, 0 = I2C mode
+#define I2C_CR1_RFU            2   // Reserved (do not use)
+#define I2C_CR1_SMB_TYPE       3   // SMBus Type: 1 = SMBus host, 0 = SMBus device
+#define I2C_CR1_ENARP          4   // ARP Enable: enable ARP protocol (SMBus)
+#define I2C_CR1_ENPEC          5   // PEC Enable: enable Packet Error Checking
+#define I2C_CR1_ENGC           6   // General Call Enable: respond to address 0x00
+#define I2C_CR1_NO_STRETCH     7   // Clock Stretch Disable (slave mode)
+#define I2C_CR1_START          8   // Start Generation (master mode)
+#define I2C_CR1_STOP           9   // Stop Generation (master mode)
+#define I2C_CR1_ACK            10  // Acknowledge Enable: 1 = send ACK after receive
+#define I2C_CR1_POS            11  // ACK/PEC Position (for reception phase)
+#define I2C_CR1_PEC            12  // Packet Error Checking value / PEC request
+#define I2C_CR1_ALERT          13  // SMBus Alert: drive SMBALERT low
+#define I2C_CR1_RFU2           14  // Reserved (do not use)
+#define I2C_CR1_SWRST          15  // Software Reset: resets the I2C peripheral
+
+/*
+ * I2C Control Register 2 (I2C_CR2)
+ */
+#define I2C_CR2_FREQ           0   // Peripheral clock frequency (bits 5:0, in MHz)
+#define I2C_CR2_ITERREN        8   // Error Interrupt Enable
+#define I2C_CR2_ITEVTEN        9   // Event Interrupt Enable
+#define I2C_CR2_ITBUFEN        10  // Buffer Interrupt Enable (TXE/RXNE)
+#define I2C_CR2_DMAEN          11  // DMA Requests Enable
+#define I2C_CR2_LAST           12  // DMA Last Transfer Enable
+
+/*
+ * I2C Status Register 1 (I2C_SR1)
+ */
+#define I2C_SR1_SB             0   // Start Bit: set after START condition generated
+#define I2C_SR1_ADDR           1   // Address Sent/Matched flag
+#define I2C_SR1_BTF            2   // Byte Transfer Finished
+#define I2C_SR1_ADD10          3   // 10-bit Address Header Sent (master mode)
+#define I2C_SR1_STOPF          4   // Stop Detection (slave mode)
+#define I2C_SR1_RFU1           5   // Reserved (do not use)
+#define I2C_SR1_RXNE           6   // Receive Buffer Not Empty
+#define I2C_SR1_TXE            7   // Transmit Buffer Empty
+#define I2C_SR1_BERR           8   // Bus Error (illegal start/stop)
+#define I2C_SR1_ARLO           9   // Arbitration Lost (multi-master)
+#define I2C_SR1_AF             10  // Acknowledge Failure (NACK received)
+#define I2C_SR1_OVR            11  // Overrun/Underrun Error
+#define I2C_SR1_PECERR         12  // PEC Error (SMBus)
+#define I2C_SR1_RFU2           13  // Reserved (do not use)
+#define I2C_SR1_TIMEOUT        14  // Timeout or Tlow Error
+#define I2C_SR1_SMBALERT       15  // SMBus Alert Flag
+
+/*
+ * I2C Status Register 2 (I2C_SR2)
+ */
+#define I2C_SR2_MSL            0   // Master/Slave: 1 = Master mode
+#define I2C_SR2_BUSY           1   // Bus Busy: 1 = communication ongoing
+#define I2C_SR2_TRA            2   // Transmitter/Receiver: 1 = Transmitter mode
+#define I2C_SR2_GENCALL        4   // General Call Address Detected
+#define I2C_SR2_SMBDEFAULT     5   // SMBus Default Address (0x61) match
+#define I2C_SR2_SMBHOST        6   // SMBus Host Header Detected
+#define I2C_SR2_DUALF          7   // Dual Address Flag (OAR2 matched)
+#define I2C_SR2_PEC            8   // Packet Error Checking value (SMBus)
+
+ /*
+  * I2C Clock Control Register (I2C_CCR)
+  */
+#define I2C_CCR_CCR            0   // Clock Control bits (11:0): define SCL period
+#define I2C_CCR_DUTY           14  // Fast Mode Duty Cycle: 0 = Tlow/Thigh=2, 1=16/9
+#define I2C_CCR_FS             15  // Fast/Standard Mode: 0=Standard (≤100kHz), 1=Fast (≤400kHz)
+
+/*
+ * Bit position definitions I2C_OAR1 — Own Address Register
+ */
+
+#define I2C_OAR1_ADD0           0   // Bit 0     – Address bit 0 (7- or 10-bit mode)
+#define I2C_OAR1_ADD71          1   // Bits 7:1  – 7-bit address bits
+#define I2C_OAR1_ADD98          8   // Bits 9:8  – Upper bits for 10-bit addressing
+#define I2C_OAR1_ADDMODE        15  // Bit 15    – Address mode: 0=7-bit, 1=10-bit
+
+/*
+ * RCC Bits position
+ */
+#define RCC_SWS                 2  // Set and cleared by hardware to indicate which clock source is used as the system clock.
+#define RCC_HPRE                4  // Set and cleared by software to control AHB clock division factor.
+#define RCC_PPRE1               10 // Set and cleared by software to control APB low-speed clock division factor.
 
 /****************************************************************************
  *                              Generic macros                              *
