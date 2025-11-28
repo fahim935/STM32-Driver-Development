@@ -42,6 +42,8 @@
 #include "i2c_mstr_irq_tx_rx.h"
 #include "i2c_slv_irq_tx_rx.h"
 #include "i2c_slv_irq_tx_rx_large_data.h"
+#include "usart_tx.h"
+#include "usart_tx_rx.h"
 
 
 // Basic feature demos
@@ -68,8 +70,12 @@
 #define STM32_I2C_SLV_IRQ_TX_RX                 14
 #define STM32_I2C_SLV_IRQ_TX_RX_LARGE_DATA      15
 
+// USART communication demos
+#define STM32_USART_TX                          16
+#define STM32_USART_TX_RX                       17
+
 // Select the active feature to run
-#define FEATURE_SELECTED        STM32_I2C_SLV_IRQ_TX_RX_LARGE_DATA
+#define FEATURE_SELECTED        STM32_USART_TX_RX
 
 
 

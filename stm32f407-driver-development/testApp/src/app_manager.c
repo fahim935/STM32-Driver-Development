@@ -57,6 +57,10 @@ void AppManager_Run(void)
     i2c_slv_irq_tx_rx_testing();
 #elif (FEATURE_SELECTED == STM32_I2C_SLV_IRQ_TX_RX_LARGE_DATA)
     i2c_slv_irq_tx_rx_large_data_testing();
+#elif (FEATURE_SELECTED == STM32_USART_TX)
+    usart_tx_testing();
+#elif (FEATURE_SELECTED == STM32_USART_TX_RX)
+    usart_tx_rx_testing();
 #else
     printf("STM32F407 : No valid feature selected\n");
 #endif

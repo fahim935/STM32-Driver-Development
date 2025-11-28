@@ -348,6 +348,19 @@ typedef struct {
     __vo uint32_t FLTR;         /* Digital/analog filter configuration */
 } I2C_RegDef_t;
 
+/******************************************************************************
+ *                        USART Register Definition
+ ******************************************************************************/
+typedef struct {
+    __vo uint32_t SR;    /* Status Register (SR): flags for RXNE, TXE, TC, ORE, NE, FE, PE */
+    __vo uint32_t DR;    /* Data Register (DR): read = received data, write = data to transmit */
+    __vo uint32_t BRR;   /* Baud Rate Register (BRR): mantissa & fraction for baud generation */
+    __vo uint32_t CR1;   /* Control Register 1 (CR1): UE, M, PCE, PS, TE, RE, RXNEIE, TXEIE */
+    __vo uint32_t CR2;   /* Control Register 2 (CR2): STOP bits, LIN, CLKEN, CPOL, CPHA, LBCL */
+    __vo uint32_t CR3;   /* Control Register 3 (CR3): CTS/RTS, DMAT/DMAR, EIE, ONEBIT */
+    __vo uint32_t GTPR;  /* Guard time & Prescaler Register (GTPR): used in Smartcard / IrDA */
+} USART_RegDef_t;
+
 
 /****************************************************************************
  *          Peripheral definitions (Type casted to XXX_RegDef_t)            *
@@ -373,6 +386,13 @@ typedef struct {
 #define I2C1        ((I2C_RegDef_t *)I2C1_BASEADDR)
 #define I2C2        ((I2C_RegDef_t *)I2C2_BASEADDR)
 #define I2C3        ((I2C_RegDef_t *)I2C3_BASEADDR)
+
+#define USART1      ((USART_RegDef_t *)USART1_BASEADDR)
+#define USART2      ((USART_RegDef_t *)USART2_BASEADDR)
+#define USART3      ((USART_RegDef_t *)USART3_BASEADDR)
+#define UART4       ((USART_RegDef_t *)UART4_BASEADDR)
+#define UART5       ((USART_RegDef_t *)UART5_BASEADDR)
+#define USART6      ((USART_RegDef_t *)USART6_BASEADDR)
 
 /****************************************************************************
  *              Clock enable macros for GPIOx peripherals                   *
@@ -510,6 +530,62 @@ typedef struct {
 #define I2C3_REG_RESET()      do { (RCC->APB1RSTR |= (1 << 23)); \
                                    (RCC->APB1RSTR &= ~(1 << 23));\
                                  } while(0)
+
+
+/*******************************************************************
+ * @section         -   USART / UART Peripheral Reset Macros
+ *
+ * @brief           -   These macros perform a hardware reset of the
+ *                      specified USART or UART peripheral by toggling
+ *                      the corresponding reset bit in the RCC APB1RSTR
+ *                      or APB2RSTR register.
+ *
+ * @details         -   A reset is done by setting the peripheral reset bit
+ *                      to 1 (assert reset), then clearing it back to 0
+ *                      (release reset). This restores all peripheral
+ *                      registers to their default reset values.
+ *
+ * @usage           -   Call the appropriate macro to reset a USART/UART:
+ *
+ *                          USART1_REG_RESET();
+ *                          USART2_REG_RESET();
+ *                          USART3_REG_RESET();
+ *                          UART4_REG_RESET();
+ *                          UART5_REG_RESET();
+ *                          USART6_REG_RESET();
+ *
+ * @note            -   These macros are typically used inside
+ *                      USART_DeInit() to ensure the peripheral starts
+ *                      from a clean, default hardware state.
+ *
+ * @note            -   USART1 and USART6 reside on the APB2 bus,
+ *                      while USART2, USART3, UART4, and UART5 are on APB1.
+ *
+ ********************************************************************/
+#define USART1_REG_RESET()    do { (RCC->APB2RSTR |=  (1U << 4)); \
+                                   (RCC->APB2RSTR &= ~(1U << 4)); \
+                                 } while(0)
+
+#define USART2_REG_RESET()    do { (RCC->APB1RSTR |=  (1U << 17)); \
+                                   (RCC->APB1RSTR &= ~(1U << 17)); \
+                                 } while(0)
+
+#define USART3_REG_RESET()    do { (RCC->APB1RSTR |=  (1U << 18)); \
+                                   (RCC->APB1RSTR &= ~(1U << 18)); \
+                                 } while(0)
+
+#define UART4_REG_RESET()     do { (RCC->APB1RSTR |=  (1U << 19)); \
+                                   (RCC->APB1RSTR &= ~(1U << 19)); \
+                                 } while(0)
+
+#define UART5_REG_RESET()     do { (RCC->APB1RSTR |=  (1U << 20)); \
+                                   (RCC->APB1RSTR &= ~(1U << 20)); \
+                                 } while(0)
+
+#define USART6_REG_RESET()    do { (RCC->APB2RSTR |=  (1U << 5)); \
+                                   (RCC->APB2RSTR &= ~(1U << 5)); \
+                                 } while(0)
+
 
 /****************************************************************************
  *              Clock Enable Macro for I2Cx peripheral                      *
@@ -781,12 +857,93 @@ typedef struct {
 #define I2C_OAR1_ADD98          8   // Bits 9:8  – Upper bits for 10-bit addressing
 #define I2C_OAR1_ADDMODE        15  // Bit 15    – Address mode: 0=7-bit, 1=10-bit
 
+/****************************************************************************
+ *              RCC Peripheral Register Bit Positions
+ ****************************************************************************/
 /*
  * RCC Bits position
  */
 #define RCC_SWS                 2  // Set and cleared by hardware to indicate which clock source is used as the system clock.
 #define RCC_HPRE                4  // Set and cleared by software to control AHB clock division factor.
 #define RCC_PPRE1               10 // Set and cleared by software to control APB low-speed clock division factor.
+#define RCC_PPRE2               13 // Set and cleared by software to control APB low-speed clock division factor.
+
+/****************************************************************************
+ *              USART Peripheral Register Bit Positions
+ ****************************************************************************/
+/*
+ * USART Status Register (USART_SR)
+ */
+#define USART_SR_PE              0   // Parity Error
+#define USART_SR_FE              1   // Framing Error
+#define USART_SR_NF              2   // Noise Flag
+#define USART_SR_ORE             3   // Overrun Error
+#define USART_SR_IDLE            4   // IDLE Line Detected
+#define USART_SR_RXNE            5   // Read Data Register Not Empty
+#define USART_SR_TC              6   // Transmission Complete
+#define USART_SR_TXE             7   // Transmit Data Register Empty
+#define USART_SR_LBD             8   // LIN Break Detection Flag
+#define USART_SR_CTS             9   // CTS Flag (if CTS enabled)
+
+/*
+ * USART Baud Rate Register (USART_BRR)
+ */
+#define USART_BRR_DIV_Fraction   0   // Fractional part of USARTDIV
+#define USART_BRR_DIV_Mantissa   4   // Mantissa part of USARTDIV
+
+/*
+ * USART Control Register 1 (USART_CR1)
+ */
+#define USART_CR1_SBK            0   // Send Break
+#define USART_CR1_RWU            1   // Receiver Wakeup
+#define USART_CR1_RE             2   // Receiver Enable
+#define USART_CR1_TE             3   // Transmitter Enable
+#define USART_CR1_IDLEIE         4   // IDLE Interrupt Enable
+#define USART_CR1_RXNEIE         5   // RXNE Interrupt Enable
+#define USART_CR1_TCIE           6   // Transmission Complete Interrupt Enable
+#define USART_CR1_TXEIE          7   // TXE Interrupt Enable
+#define USART_CR1_PEIE           8   // Parity Error Interrupt Enable
+#define USART_CR1_PS             9   // Parity Selection (0: Even, 1: Odd)
+#define USART_CR1_PCE            10  // Parity Control Enable
+#define USART_CR1_WAKE           11  // Wakeup Method (Idle / Address Mark)
+#define USART_CR1_M              12  // Word Length (0: 8-bit, 1: 9-bit)
+#define USART_CR1_UE             13  // USART Enable
+#define USART_CR1_OVER8          14  // Oversampling Mode (1: By 8, 0: By 16)
+
+/*
+ * USART Control Register 2 (USART_CR2)
+ */
+#define USART_CR2_ADD            0   // Address of the USART (for multiprocessor mode)
+#define USART_CR2_LBDL           5   // LIN Break Detection Length
+#define USART_CR2_LBDIE          6   // LIN Break Detection Interrupt Enable
+#define USART_CR2_LBCL           8   // Last Bit Clock Pulse
+#define USART_CR2_CPHA           9   // Clock Phase
+#define USART_CR2_CPOL           10  // Clock Polarity
+#define USART_CR2_CLKEN          11  // Clock Enable (synchronous mode)
+#define USART_CR2_STOP           12  // STOP Bits (12–13)
+#define USART_CR2_LINEN          14  // LIN Mode Enable
+
+/*
+ * USART Control Register 3 (USART_CR3)
+ */
+#define USART_CR3_EIE            0   // Error Interrupt Enable (ORE/FE/NF)
+#define USART_CR3_IREN           1   // IrDA Mode Enable
+#define USART_CR3_IRLP           2   // IrDA Low-Power Mode
+#define USART_CR3_HDSEL          3   // Half-Duplex Selection
+#define USART_CR3_NACK           4   // Smartcard NACK Enable
+#define USART_CR3_SCEN           5   // Smartcard Mode Enable
+#define USART_CR3_DMAR           6   // DMA Enable Receiver
+#define USART_CR3_DMAT           7   // DMA Enable Transmitter
+#define USART_CR3_RTSE           8   // RTS Hardware Flow Control Enable
+#define USART_CR3_CTSE           9   // CTS Hardware Flow Control Enable
+#define USART_CR3_CTSIE          10  // CTS Interrupt Enable
+#define USART_CR3_ONEBIT         11  // One Sample Bit Method Enable
+
+/*
+ * USART Guard Time & Prescaler Register (USART_GTPR)
+ */
+#define USART_GTPR_PSC           0   // Prescaler Value for Smartcard and IrDA (bits 0–7)
+#define USART_GTPR_GT            8   // Guard Time Value (bits 8–15)
 
 /****************************************************************************
  *                              Generic macros                              *

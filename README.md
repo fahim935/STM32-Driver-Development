@@ -10,9 +10,9 @@ Complete bare-metal peripheral driver suite for STM32F407 microcontroller, devel
 | **GPIO** | ✅ Completed   | Pin configuration, interrupt handling, alternate function |
 | **SPI**  | ✅ Completed   | Master/slave modes, error handling |
 | **I2C**  | ✅ Completed   | Polling/Interrupt modes, error handling |
-| **UART** | 🔄 In Progress | Polling/Interrupt modes, flow control |
-| **USART**| ⏳ Planned     | Synchronous mode, LIN, smartcard |
-| **RCC**  | ✅ Partial     | Clock system configuration |
+| **UART** | ✅ Completed   | Polling/Interrupt modes, flow control |
+| **USART**| ✅ Completed   | Synchronous mode |
+| **RCC**  | ✅ Completed   | PLL Clock system configuration |
 
 ## 📋 Project Overview
 
@@ -28,7 +28,7 @@ This repository contains a complete set of bare-metal drivers for STM32F407, imp
 
 - **MCU**      : STM32F407VGT6 (ARM Cortex-M4)
 - **Toolchain**: ARM GCC, STM32CubeIDE
-- **Debugging**: ST-Link, Logic Analyzer, Oscilloscope
+- **Debugging**: ST-Link, Logic Analyzer, SWD
 - **Protocols**: SPI, I2C, UART, USART
 - **Standards**: MISRA C compliance where applicable
 
